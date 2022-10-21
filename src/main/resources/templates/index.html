@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script>
+    function coreTest()
+    {
+    fetch("http://localhost:8081/api/users",{
+            method:"GET",
+            headers:{
+            "Content-Type":"text/xml",
+            }
+        }).then(response => {
+            response.json().then(function(data){
+                console.log(data)
+            })
+        }
+    }
+</script>
+<body>
+<button name="coreTest" onclick="coreTest()">coreTest</button>
+</body>
+</html>
