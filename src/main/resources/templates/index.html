@@ -1,25 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" >
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>insert title here</title>
+    <script>
+    function authorizationCode(){
+            window.location=new
+            URL('http://localhost:8081/oauth2/authorization/keycloak');}
+
+    </script>
 </head>
-<script>
-    function coreTest()
-    {
-    fetch("http://localhost:8081/api/users",{
-            method:"GET",
-            headers:{
-            "Content-Type":"text/xml",
-            }
-        }).then(response => {
-            response.json().then(function(data){
-                console.log(data)
-            })
-        }
-    }
-</script>
 <body>
-<button name="coreTest" onclick="coreTest()">coreTest</button>
+<div class="content">
+
+<div class="container">
+    <div class="align-item-center">
+        <div class="col-md-5">
+            <div class="social-login text-center">
+                <div sec:authorize="isAnonymous()">
+                    <a th:href="@{/oauth2/authorization/google}" class="google btn btn-clock">
+                        Sign in with Google
+                    </a></br>
+                    <a th:href="@{/oauth2/authorization/naver}" class="nave btn btn-clock">
+                        Sign in with Naver
+                    </a></br>
+                    <a th:href="@{/oauth2/authorization/keycloak}" class="keycloak btn btn-clock">
+                        Sign in with keycloak
+                    </a></br>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <div><h2>안녕하세요.<span th:text="${user}"/>님.</h2></div>
+                    </br></br>
+                    <a th:href="@{/api/login}" class="keycloak btn btn-block">OAuth2 인증 정보</a>
+                    <a th:href="@{/api/oidc/}" class="keycloak btn btn-block">OpenID Oauth2 인증 정보</a></br></br>
+                    <a th:href="@{/logout/}" class="google btn btn-block">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div></div>
+
 </body>
+
 </html>
