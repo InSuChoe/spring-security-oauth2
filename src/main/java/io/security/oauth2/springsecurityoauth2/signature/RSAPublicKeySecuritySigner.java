@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.security.PrivateKey;
 
-public class RSAPublicSecuritySigner extends SecuritySigner{
+public class RSAPublicKeySecuritySigner extends SecuritySigner{
     private PrivateKey privateKey;
     @Override
     public String getJwtToken(UserDetails user, JWK jwk) throws JOSEException {

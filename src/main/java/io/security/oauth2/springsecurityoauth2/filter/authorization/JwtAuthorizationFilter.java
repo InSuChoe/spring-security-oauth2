@@ -30,14 +30,23 @@ public abstract class JwtAuthorizationFilter extends OncePerRequestFilter {
         this.jwsVerifier = jwsVerifier;
     }
 
+    protected boolean tokenResolve(HttpServletRequest request)
+    {
+        String header = request.getHeader("Authorization");
+        return header == null || !header.startsWith("Bearer ");
+    }
+    protected String getToken(HttpServletRequest request)
+    {
+        String header = request.getHeader("Authorization");
+        return header.replace("Bearer ", "");
+    }
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String header = request.getHeader("Authorization");
-        if (header == null || !header.startsWith("Bearer ")) {
+        if (tokenResolve(request)) {
             filterChain.doFilter(request, response);
             return;
         }
-        String token = header.replace("Bearer ", "");
+        String token =getToken(request);
 
         SignedJWT signedJWT;
 

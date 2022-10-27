@@ -26,12 +26,11 @@ public class JwtDecoderConfig {
         return NimbusJwtDecoder.withSecretKey(secretKey)
                 .macAlgorithm(MacAlgorithm.from(properties.getJwt().getJwsAlgorithms().get(0)))
                 .build();
-
     }
 
     @Bean
     @ConditionalOnProperty(prefix = "spring.security.oauth2.resourceserver.jwt",
-            name = "jws-algorithms", havingValue = "RS512", matchIfMissing = false)
+            name = "jws-algorithms", havingValue = "RS256", matchIfMissing = false)
     public JwtDecoder jwtDecoderByPublicKeyValue(RSAKey rsaKey, OAuth2ResourceServerProperties properties) throws JOSEException {
         RSAPublicKey rsaPublicKey = rsaKey.toRSAPublicKey();
         return NimbusJwtDecoder.withPublicKey(rsaPublicKey)

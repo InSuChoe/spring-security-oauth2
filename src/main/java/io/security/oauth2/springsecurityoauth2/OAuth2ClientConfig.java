@@ -13,16 +13,16 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 @EnableWebSecurity
 public class OAuth2ClientConfig {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests(authRequest -> authRequest.anyRequest().authenticated());
-        http.oauth2Login(Customizer.withDefaults());
-        http.logout().logoutSuccessHandler(oidcLogoutSuccessHandler())
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-                .deleteCookies("JSESSIONID");
-        return http.build();
-    }
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        http.authorizeRequests(authRequest -> authRequest.anyRequest().authenticated());
+//        http.oauth2Login(Customizer.withDefaults());
+//        http.logout().logoutSuccessHandler(oidcLogoutSuccessHandler())
+//                .invalidateHttpSession(true)
+//                .clearAuthentication(true)
+//                .deleteCookies("JSESSIONID");
+//        return http.build();
+//    }
 
 
 //    @Bean
