@@ -8,8 +8,9 @@ import com.nimbusds.jose.jwk.RSAKey;
 import io.security.oauth2.springsecurityoauth2.filter.authentication.JwtAuthenticationFilter;
 import io.security.oauth2.springsecurityoauth2.filter.authorization.JwtAuthorizationMacFilter;
 import io.security.oauth2.springsecurityoauth2.filter.authorization.JwtAuthorizationRsaFilter;
+import io.security.oauth2.springsecurityoauth2.filter.authorization.JwtAuthorizationRsaPublicKeyFilter;
+import io.security.oauth2.springsecurityoauth2.signature.RSAPublicSecuritySigner;
 import io.security.oauth2.springsecurityoauth2.signature.RSASecuritySigner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,9 +23,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.security.interfaces.RSAPublicKey;
 
 @Configuration
 public class Oauth2ResourceServerConfig {
@@ -39,22 +43,23 @@ public class Oauth2ResourceServerConfig {
         httpSecurity.authorizeRequests(req -> req.antMatchers("/").permitAll()
                 .anyRequest().authenticated());
         httpSecurity.userDetailsService(userDetailsService());
-        httpSecurity.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
         httpSecurity.addFilterBefore(jwtAuthenticationFilter(null, null), UsernamePasswordAuthenticationFilter.class);
-//        httpSecurity.addFilterBefore(jwtAuthorizationRsaFilter(null), UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilterBefore(jwtAuthorizationRsaPublicKeyFilter(null),UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
+@Bean public JwtAuthorizationRsaPublicKeyFilter jwtAuthorizationRsaPublicKeyFilter(JwtDecoder jwtDecoder) throws JOSEException {
+    return new JwtAuthorizationRsaPublicKeyFilter(jwtDecoder);
+}
+//    @Bean
+//    public JwtAuthorizationRsaFilter jwtAuthorizationRsaFilter(RSAKey rsaKey) throws JOSEException {
+//        return new JwtAuthorizationRsaFilter(new RSASSAVerifier(rsaKey.toRSAPublicKey()));
+//    }
 
-    @Bean
-    public JwtAuthorizationRsaFilter jwtAuthorizationRsaFilter(RSAKey rsaKey) throws JOSEException {
-        return new JwtAuthorizationRsaFilter(new RSASSAVerifier(rsaKey.toRSAPublicKey()));
-    }
 
-
-    @Bean
-    public JwtAuthorizationMacFilter jwtAuthorizationMacFilter(OctetSequenceKey octetSequenceKey) throws JOSEException {
-        return new JwtAuthorizationMacFilter(new MACVerifier(octetSequenceKey.toSecretKey()));
-    }
+//    @Bean
+//    public JwtAuthorizationMacFilter jwtAuthorizationMacFilter(OctetSequenceKey octetSequenceKey) throws JOSEException {
+//        return new JwtAuthorizationMacFilter(new MACVerifier(octetSequenceKey.toSecretKey()));
+//    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -62,8 +67,8 @@ public class Oauth2ResourceServerConfig {
     }
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter(RSASecuritySigner rsaSecuritySigner, RSAKey rsaKey) throws Exception {
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(rsaSecuritySigner, rsaKey);
+    public JwtAuthenticationFilter jwtAuthenticationFilter(RSAPublicSecuritySigner rsaPublicSecuritySigner, RSAKey rsaKey) throws Exception {
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(rsaPublicSecuritySigner, rsaKey);
         jwtAuthenticationFilter.setAuthenticationManager(authenticationManager(null));
         return jwtAuthenticationFilter;
 
