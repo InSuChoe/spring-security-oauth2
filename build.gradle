@@ -6,7 +6,7 @@ plugins {
 
 group = 'io.security.oauth2'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+sourceCompatibility = '11'
 
 configurations {
 	compileOnly {
@@ -21,16 +21,18 @@ repositories {
 
 dependencies {
 // https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf
+
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.7.4'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.7.5'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.7.4'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.7.5'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'mysql:mysql-connector-java'
+	runtimeOnly 'com.nimbusds:oauth2-oidc-sdk:10.0'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
